@@ -5,9 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Builder;
+
 
 class Office extends Model
 {
@@ -40,6 +43,20 @@ class Office extends Model
     {
         return $this->morphMany(Image::class, 'resource');
 
+    }
+
+    public function tags(): BelongsToMany
+    {
+        return $this->belongsToMany(Tag::class, 'offices_tags');
+    }
+
+    public function scopeNearestTo(Builder $builder, $latitude, $longitude)
+    {
+        return $builder->select()
+            ->selectRaw(
+                'SQRT( POW(69.1 * (latitude - ?), 2) + POW(69.1 * (? - longitude) * COS(latitude / 57.3), 2)) AS distance',
+                [$latitude, $longitude]
+            )->orderBy('distance');
     }
 
 

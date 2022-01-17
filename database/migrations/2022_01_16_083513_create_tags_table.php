@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Tag;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,13 +16,13 @@ class CreateTagsTable extends Migration
     {
         Schema::create('tags', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name')->nullable();
             $table->timestamps();
         });
 
-        \App\Models\Tag::create(['name' => 'has_ac']);
-        \App\Models\Tag::create(['name' => 'has_private_room']);
-        \App\Models\Tag::create(['name' => 'has_coffee_machine']);
+        Tag::create(['name' => 'has_ac']);
+        Tag::create(['name' => 'has_private_room']);
+        Tag::create(['name' => 'has_coffee_machine']);
     }
 
     /**
