@@ -18,7 +18,6 @@ class Office extends Model
 
     public const APPROVAL_PENDING = 1;
     public const APPROVAL_APPROVED = 2;
-    public const APPROVAL_REJECTED = 3;
 
     protected $casts = [
         'latitude' => 'decimal:8',
@@ -53,10 +52,10 @@ class Office extends Model
     public function scopeNearestTo(Builder $builder, $latitude, $longitude)
     {
         return $builder->select()
-            ->selectRaw(
-                'SQRT( POW(69.1 * (latitude - ?), 2) + POW(69.1 * (? - longitude) * COS(latitude / 57.3), 2)) AS distance',
+            ->orderByRaw(
+                'SQRT( POW(69.1 * (latitude - ?), 2) + POW(69.1 * (? - longitude) * COS(latitude / 57.3), 2))',
                 [$latitude, $longitude]
-            )->orderBy('distance');
+            );
     }
 
 
